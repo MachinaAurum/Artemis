@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachinaAurum.Artemis.Tests", "MachinaAurum.Artemis.Tests\MachinaAurum.Artemis.Tests.csproj", "{BC0CF24B-EC41-4854-BB84-EF5EFA64F801}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachinaAurum.Artemis.Core", "MachinaAurum.Artemis.Core\MachinaAurum.Artemis.Core.csproj", "{4CB90722-124A-47ED-AC3C-01C328E2D65B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachinaAurum.Artemis", "MachinaAurum.Artemis\MachinaAurum.Artemis.csproj", "{EADAA49C-42EB-49DA-833D-9205F8682B5E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EB620A66-F81F-4940-8042-EE11D22C03E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeServer", "FakeServer\FakeServer.csproj", "{E2330824-7BCE-4953-A7B7-29582AA35564}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{55605AFB-68F0-45C6-AE43-E7424B2A5EF9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{D729539A-F9D8-443A-AB08-DE1AACFCC4BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MachinaAurum.Artemis.Server", "MachinaAurum.Artemis.Server\MachinaAurum.Artemis.Server.csproj", "{DF2A4B0D-3F63-4A7F-B0B5-78F1A47A4899}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BC0CF24B-EC41-4854-BB84-EF5EFA64F801}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC0CF24B-EC41-4854-BB84-EF5EFA64F801}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC0CF24B-EC41-4854-BB84-EF5EFA64F801}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC0CF24B-EC41-4854-BB84-EF5EFA64F801}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CB90722-124A-47ED-AC3C-01C328E2D65B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CB90722-124A-47ED-AC3C-01C328E2D65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CB90722-124A-47ED-AC3C-01C328E2D65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CB90722-124A-47ED-AC3C-01C328E2D65B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EADAA49C-42EB-49DA-833D-9205F8682B5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EADAA49C-42EB-49DA-833D-9205F8682B5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EADAA49C-42EB-49DA-833D-9205F8682B5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EADAA49C-42EB-49DA-833D-9205F8682B5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2330824-7BCE-4953-A7B7-29582AA35564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2330824-7BCE-4953-A7B7-29582AA35564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2330824-7BCE-4953-A7B7-29582AA35564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2330824-7BCE-4953-A7B7-29582AA35564}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF2A4B0D-3F63-4A7F-B0B5-78F1A47A4899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF2A4B0D-3F63-4A7F-B0B5-78F1A47A4899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF2A4B0D-3F63-4A7F-B0B5-78F1A47A4899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF2A4B0D-3F63-4A7F-B0B5-78F1A47A4899}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BC0CF24B-EC41-4854-BB84-EF5EFA64F801} = {EB620A66-F81F-4940-8042-EE11D22C03E4}
+		{4CB90722-124A-47ED-AC3C-01C328E2D65B} = {55605AFB-68F0-45C6-AE43-E7424B2A5EF9}
+		{EADAA49C-42EB-49DA-833D-9205F8682B5E} = {55605AFB-68F0-45C6-AE43-E7424B2A5EF9}
+		{E2330824-7BCE-4953-A7B7-29582AA35564} = {D729539A-F9D8-443A-AB08-DE1AACFCC4BD}
+		{DF2A4B0D-3F63-4A7F-B0B5-78F1A47A4899} = {D729539A-F9D8-443A-AB08-DE1AACFCC4BD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
+	EndGlobalSection
+EndGlobal

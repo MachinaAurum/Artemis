@@ -1,0 +1,20 @@
+<html>
+<head>
+</head>
+<body>
+    <form action="/ui" method="post">
+        <textarea name="routing" cols="100" rows="20">
+create dataflow HelloWorldDataFlow
+HttpSource -> requests { Port: 9090 }
+HttpHostRouter (requests) -> api1.service.com { Host: 'api1.service.com'}
+HttpHostRouter (requests) -> api2.service.com { Host: 'api2.service.com'}
+HttpCloseResponseSink (requests) { Status: 404 }
+HttpRedirectResponseSink (api1.service.com) { Host: 'localhost', Port: 8080 }
+HttpRedirectResponseSink (api2.service.com) { Host: 'localhost', Port: 8081 }
+        </textarea>
+        <div>
+            <button>Save</button>
+        </div>
+    </form>
+</body>
+</html>
