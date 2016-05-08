@@ -1,6 +1,8 @@
 # Artemis
 Zero-conf API gateway made in .NET
 
+![Alt text](https://raw.githubusercontent.com/MachinaAurum/Artemis/master/artemisarchitecture.png "Artemis Archtiecture")
+
 #Understand a little more
 
 http://www.ryantomlinson.com/consul-service-discovery-in-a-microservice-world/  
