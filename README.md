@@ -1,6 +1,8 @@
 # Artemis
 Zero-conf API gateway made in .NET
 
+Current version: POC
+
 ![Alt text](https://raw.githubusercontent.com/MachinaAurum/Artemis/master/artemisarchitecture.png "Artemis Archtiecture")
 
 #Understand a little more
