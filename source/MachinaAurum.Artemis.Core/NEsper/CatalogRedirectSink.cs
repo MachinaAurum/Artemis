@@ -18,14 +18,14 @@ namespace MachinaAurum.Artemis.NEsper
         public string Service;
 
         [DataFlowOpParameter]
-        public bool UseHostHeader;
+        public string Use;
 
         Func<IServiceFinder> FinderFactory;
 
         public CatalogRedirectSink()
         {
             Service = null;
-            UseHostHeader = false;
+            Use = "Host";
         }
 
         public void Close(DataFlowOpCloseContext closeContext)
@@ -61,9 +61,14 @@ namespace MachinaAurum.Artemis.NEsper
 
             var serviceName = Service;
 
-            if (UseHostHeader)
+            var use = Use.ToLower();
+            if (use == "host")
             {
                 serviceName = context.Request.Host;
+            }
+            else if (use == "path")
+            {
+                serviceName = context.Request.Uri;
             }
 
             log.Information("Sending request to {Service}", serviceName);

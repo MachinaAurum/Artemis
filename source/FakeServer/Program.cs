@@ -12,15 +12,15 @@ namespace FakeServer
     {
         static void Main(string[] args)
         {
-            Annourcer.UseConsul("api1.service.com", 8081, 18081);
-            OpenFakeHttpServer("api1.service.com", 8081);
-            Annourcer.UseConsul("api2.service.com", 8081, 18082);
-            OpenFakeHttpServer("api2.service.com", 8082);
+            Annourcer.UseConsul("/api/api1", 8081, 18081, new[] { "gateway" });
+            OpenFakeHttpServer(8081);
+            Annourcer.UseConsul("/api/api2", 8082, 18082, new[] { "gateway" });
+            OpenFakeHttpServer(8082);
 
             Console.ReadLine();
         }
 
-        private static void OpenFakeHttpServer(string name, int port)
+        private static void OpenFakeHttpServer(int port)
         {
             Console.WriteLine($"Openning port {port}");
             int i = 0;

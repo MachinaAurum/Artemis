@@ -42,10 +42,6 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Consul, Version=0.6.4.2, Culture=neutral, PublicKeyToken=20a6ad9a81df1d95, processorArchitecture=MSIL">
-      <HintPath>..\packages\Consul.0.6.4.2\lib\net45\Consul.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.Owin, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
@@ -157,6 +153,7 @@
     <Compile Include="NEsper\CatalogRedirectSink.cs" />
     <Compile Include="NEsper\DataflowContext.cs" />
     <Compile Include="NEsper\EnrichRequestCorrelationFilter.cs" />
+    <Compile Include="NEsper\PathFilter.cs" />
     <Compile Include="NEsper\HostFilter.cs" />
     <Compile Include="NEsper\RedirectSink.cs" />
     <Compile Include="NEsper\TcpSource.cs" />
