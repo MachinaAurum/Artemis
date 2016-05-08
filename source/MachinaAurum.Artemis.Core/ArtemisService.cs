@@ -1,14 +1,16 @@
 ﻿using com.espertech.esper.client;
-using Consul;
 using MachinaAurum.Artemis.Core.Services;
 using MachinaAurum.Artemis.Http;
 using MachinaAurum.Artemis.NEsper;
 using Microsoft.Owin.Hosting;
 using Microsoft.Practices.Unity;
+using Newtonsoft.Json.Linq;
 using Owin;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -81,7 +83,7 @@ namespace MachinaAurum.Artemis
                 var elp1 = Provider.EPAdministrator.CreateEPL(@"create dataflow ArtemisRouting
 TcpSource -> requests { Port: 9090 }
 EnrichRequestCorrelationFilter (requests) -> enrichedrequests {}
-CatalogRedirectSink (enrichedrequests) { UseHostHeader: true }");
+CatalogRedirectSink (sinks) { Use: ""Path"" }");
 
                 var unity = new UnityContainer();
                 unity.RegisterType<IServiceFinder>(new InjectionFactory(x => Catalog));
@@ -109,16 +111,13 @@ CatalogRedirectSink (enrichedrequests) { UseHostHeader: true }");
                             Logger.Warning("Consul not found");
                         }
                         else
-                        {                        
-                            using (var client = new ConsulClient())
-                            {
-                                await UpdateCatalogFromConsul(client);
-                            }
+                        {
+                            await UpdateCatalogFromConsul();
                         }
 
                         await Task.Delay(TimeSpan.FromSeconds(10));
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Logger.Error(e, "ERROR");
                     }
@@ -126,23 +125,39 @@ CatalogRedirectSink (enrichedrequests) { UseHostHeader: true }");
             });
         }
 
-        private async Task UpdateCatalogFromConsul(ConsulClient client)
+        private async Task UpdateCatalogFromConsul()
         {
             var catalog = new ServiceCatalog();
 
-            var services = await client.Catalog.Services();
-
-            foreach (var service in services.Response)
+            using (var client = new HttpClient())
             {
-                var serviceInfo = await client.Catalog.Service(service.Key);
+                var response = await client.GetAsync("http://localhost:8500/v1/agent/services");
+                var responseDictionary = await response.Content.ReadAsAsync<Dictionary<string, object>>();
 
-                foreach (var endpoints in serviceInfo.Response)
+                foreach (var item in responseDictionary)
                 {
-                    catalog.AddServiceInfo("Consul", endpoints.ServiceName, endpoints.ServiceAddress, endpoints.ServicePort);
+                    try
+                    {
+                        var serviceName = item.Key;
+                        var service = (item.Value as JObject).ToObject<ConsulService>();
+                        catalog.AddServiceInfo("Consul", service.Service, service.Address, service.Port);
+                    }
+                    catch
+                    {
+                        //LOG SOMETHING!
+                    }
                 }
             }
 
             Catalog = catalog;
+        }
+
+        public class ConsulService
+        {
+            public string Id { get; set; }
+            public string Service { get; set; }
+            public string Address { get; set; }
+            public int Port { get; set; }
         }
 
         public bool Stop()

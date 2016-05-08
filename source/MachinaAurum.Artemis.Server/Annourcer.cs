@@ -10,7 +10,7 @@ namespace MachinaAurum.Artemis.Server
 {
     public static class Annourcer
     {
-        public static void UseConsul(string serviceName, int port, int checkPort)
+        public static void UseConsul(string serviceName, int port, int checkPort, string[] tags)
         {
             var li = new HttpListener();
             li.Prefixes.Add($"http://+:{checkPort}/check/");
@@ -39,16 +39,16 @@ namespace MachinaAurum.Artemis.Server
                         {
                             var localIp = "127.0.0.1";
                             var check = $"http://127.0.0.1:{checkPort}/check/";
-                            string contentStr = $@"{{""Name"":""{serviceName}"",""Address"":""{localIp}"",""Port"":{port},""Check"":{{""HTTP"":""{check}"",""Interval"":""10s""}}}}";
+                            string contentStr = $@"{{""Name"":""{serviceName}"",""Address"":""{localIp}"",""Port"":{port},""Tags"": [{string.Join(",", tags.Select(x => $"\"{x}\"" ))}],""Check"":{{""HTTP"":""{check}"",""Interval"":""10s""}}}}";
                             var content = new StringContent(contentStr);
 
                             var registerUrl = $"http://{"127.0.0.1"}:{8500}/v1/agent/service/register";
 
-                            var response = await client.PostAsync(registerUrl, content);                            
+                            var response = await client.PostAsync(registerUrl, content);
                         }
                     }
-                    catch (Exception e)
-                    {                        
+                    catch (Exception)
+                    {
                     }
 
                     await Task.Delay(TimeSpan.FromSeconds(10));
