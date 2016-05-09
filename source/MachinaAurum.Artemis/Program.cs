@@ -9,6 +9,7 @@ namespace MachinaAurum.Artemis
         static int Main()
         {
             int? port = null;
+            string tag = null;
 
             var logger = new LoggerConfiguration()
                .UseArtemis()
@@ -22,7 +23,7 @@ namespace MachinaAurum.Artemis
                 x.UseSerilog(logger);
                 x.Service<ArtemisService>(s =>
                 {
-                    s.ConstructUsing(() => new ArtemisService(port, logger));
+                    s.ConstructUsing(() => new ArtemisService(port, logger, tag));
                     s.WhenStarted(v => v.Start());
                     s.WhenStopped(v => v.Stop());
                 });
@@ -31,7 +32,8 @@ namespace MachinaAurum.Artemis
                 x.SetStopTimeout(TimeSpan.FromSeconds(10));
 
                 x.AddCommandLineDefinition("uiport", v => port = int.Parse(v));
+                x.AddCommandLineDefinition("tag", v => tag = v);
             });
         }
-    }    
+    }
 }
