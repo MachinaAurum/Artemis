@@ -12,9 +12,9 @@ namespace FakeServer
     {
         static void Main(string[] args)
         {
-            Annourcer.UseConsul("/api/api1", 8081, 18081, new[] { "gateway" });
+            Annourcer.UseConsul("/api/api1", 8081, 18081, new[] { "artemis-gateway" });
             OpenFakeHttpServer(8081);
-            Annourcer.UseConsul("/api/api2", 8082, 18082, new[] { "gateway" });
+            Annourcer.UseConsul("/api/api2", 8082, 18082, new[] { "artemis-gateway" });
             OpenFakeHttpServer(8082);
 
             Console.ReadLine();

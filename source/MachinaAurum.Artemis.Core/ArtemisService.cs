@@ -8,10 +8,12 @@ using Newtonsoft.Json.Linq;
 using Owin;
 using Serilog;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Formatting;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Web.Http;
 using WebApiContrib.Formatting.Razor;
@@ -23,13 +25,16 @@ namespace MachinaAurum.Artemis
     {
         EPServiceProvider Provider;
 
-        int? Port;
+        int? UIPort;
+        string Tag;
+
         ILogger Logger;
         ServiceCatalog Catalog = new ServiceCatalog();
 
-        public ArtemisService(int? port, ILogger logger)
+        public ArtemisService(int? uiport, ILogger logger, string tag)
         {
-            Port = port;
+            UIPort = uiport;
+            Tag = tag ?? "artemis-gateway";
             Logger = logger;
         }
 
@@ -47,12 +52,12 @@ namespace MachinaAurum.Artemis
 
         private void ConfigureAdminUI()
         {
-            if (Port.HasValue)
+            if (UIPort.HasValue)
             {
                 var unity = new UnityContainer();
                 unity.RegisterInstance<EPServiceProvider>(Provider);
 
-                var app = WebApp.Start($"http://+:{Port}/ui", x =>
+                var app = WebApp.Start($"http://+:{UIPort}/ui", x =>
                 {
                     var webApiConfiguration = new HttpConfiguration();
                     webApiConfiguration.DependencyResolver = new UnityResolver(unity);
@@ -80,10 +85,10 @@ namespace MachinaAurum.Artemis
                 Provider.EPAdministrator.Configuration.AddImport<CatalogRedirectSink>();
                 Provider.EPAdministrator.Configuration.AddEventType<HttpContext>("HttpContext");
 
-                var elp1 = Provider.EPAdministrator.CreateEPL(@"create dataflow ArtemisRouting
-TcpSource -> requests { Port: 9090 }
-EnrichRequestCorrelationFilter (requests) -> enrichedrequests {}
-CatalogRedirectSink (sinks) { Use: ""Path"" }");
+                var elp1 = Provider.EPAdministrator.CreateEPL($@"create dataflow ArtemisRouting
+TcpSource -> requests {{}}
+EnrichRequestCorrelationFilter (requests) -> enrichedrequests {{}}
+CatalogRedirectSink (enrichedrequests) {{ Use: ""Path"" }}");
 
                 var unity = new UnityContainer();
                 unity.RegisterType<IServiceFinder>(new InjectionFactory(x => Catalog));
@@ -96,6 +101,8 @@ CatalogRedirectSink (sinks) { Use: ""Path"" }");
                 instance.Start();
             });
         }
+
+
 
         private void StartConsul()
         {
@@ -140,7 +147,11 @@ CatalogRedirectSink (sinks) { Use: ""Path"" }");
                     {
                         var serviceName = item.Key;
                         var service = (item.Value as JObject).ToObject<ConsulService>();
-                        catalog.AddServiceInfo("Consul", service.Service, service.Address, service.Port);
+
+                        if (service.Tags.Contains(Tag))
+                        {
+                            catalog.AddServiceInfo("Consul", service.Service, service.Address, service.Port);
+                        }
                     }
                     catch
                     {
@@ -158,6 +169,7 @@ CatalogRedirectSink (sinks) { Use: ""Path"" }");
             public string Service { get; set; }
             public string Address { get; set; }
             public int Port { get; set; }
+            public string[] Tags { get; set; }
         }
 
         public bool Stop()

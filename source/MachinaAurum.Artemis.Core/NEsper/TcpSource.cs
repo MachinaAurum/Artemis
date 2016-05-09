@@ -5,6 +5,7 @@ using MachinaAurum.Artemis.Serilog;
 using Serilog;
 using System;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
@@ -17,12 +18,12 @@ namespace MachinaAurum.Artemis.NEsper
         private EPDataFlowEmitter Emitter;
 
         [DataFlowOpParameter]
-        public int Port;
+        public int? Port;
 
         public TcpSource()
         {
             Emitter = null;
-            Port = 80;
+            Port = null;
         }
 
         public void Close(DataFlowOpCloseContext closeContext)
@@ -35,8 +36,17 @@ namespace MachinaAurum.Artemis.NEsper
             var dataflowContext = initContext.DataflowInstanceUserObject as DataflowContext;
             var log = dataflowContext.Resolve<ILogger>();
 
-            var tcpListener = new TcpListener(IPAddress.Any, Port);
-            tcpListener.Start();
+            var port = ChoosePort(Port, new[] { 80, 8080 });
+
+            if(port.HasValue == false)
+            {
+                log.Error("Unable to bind to port {Port}", Port);
+            }
+
+            var tcpListener = new TcpListener(IPAddress.Any, port.Value);
+            tcpListener.Start(100);
+
+            log.Information("Port open {Endpoint}", tcpListener.LocalEndpoint.ToString());
 
             Task.Factory.StartNew(async () =>
             {
@@ -67,6 +77,52 @@ namespace MachinaAurum.Artemis.NEsper
 
             var httpContext = initContext.ServicesContext.EventAdapterService.GetEventTypeByName("HttpContext");
             return new DataFlowOpInitializeResult(new[] { new com.espertech.esper.dataflow.util.GraphTypeDesc(false, false, httpContext) });
+        }
+
+        private int? ChoosePort(int? choosen, int[] options)
+        {
+            if (choosen.HasValue)
+            {
+                if (IsPortAvailable(choosen))
+                {
+                    return choosen;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            foreach (var port in options)
+            {
+                if (IsPortAvailable(port))
+                {
+                    return port;
+                }
+            }
+
+            return 0;
+        }
+
+        private bool IsPortAvailable(int? port)
+        {
+            if (port.HasValue == false)
+            {
+                return false;
+            }
+
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var tcpConnInfoArray = ipGlobalProperties.GetActiveTcpConnections();
+
+            foreach (var tcpi in tcpConnInfoArray)
+            {
+                if (tcpi.LocalEndPoint.Port == port)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public void Next()
